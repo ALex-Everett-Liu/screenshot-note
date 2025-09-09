@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screenshot Note - My Personal Wiki</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-camera"></i>
+                Screenshot Note
+            </h1>
+            <div class="date-display" id="current-date">Loading...</div>
+        </div>
+
+        <div class="nav">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Screenshot Note</span>
+        </div>
+
+        <div class="content">
+            <div class="status-message" id="status-message"></div>
+
+            <div class="upload-section" id="upload-area">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">Drop screenshots here or click to select</div>
+                <div class="upload-hint">Supports JPG, PNG, GIF, WebP (max 10MB)</div>
+                <input type="file" class="upload-input" id="file-input" accept="image/*" multiple>
+            </div>
+
+            <div class="controls">
+                <div class="filter-controls">
+                    <input type="text" class="filter-input" id="search-input" placeholder="Search descriptions...">
+                    <button class="control-btn" onclick="filterImages()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="action-controls">
+                    <button class="control-btn save-btn" onclick="saveAll()">
+                        <i class="fas fa-save"></i> Save All
+                    </button>
+                    <button class="control-btn export-btn" onclick="exportAll()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button class="control-btn import-btn" onclick="importAll()">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
+                    <button class="control-btn clear-btn" onclick="clearAll()">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+            </div>
+
+            <div class="gallery-container" id="gallery">
+                <div class="empty-state">
+                    <i class="fas fa-images"></i>
+                    <h3>No screenshots yet</h3>
+                    <p>Start by dropping some screenshots above</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settings-panel" style="display: none;">
+            <div class="settings-header">
+                <h3><i class="fas fa-cogs"></i> Screenshot Note Settings</h3>
+                <button class="settings-toggle" onclick="toggleSettings()">Close Settings</button>
+            </div>
+            
+            <div class="settings-row">
+                <label>Import from JSON:</label>
+                <button class="settings-button" onclick="browseForJsonFile()">
+                    <i class="fas fa-folder-open"></i> Browse JSON Files
+                </button>
+                <button class="settings-button secondary" onclick="loadSampleData()">
+                    <i class="fas fa-database"></i> Load Sample Data
+                </button>
+            </div>
+            
+            <div class="settings-row">
+                <label>Data Management:</label>
+                <button class="settings-button" onclick="exportToFile()">
+                    <i class="fas fa-download"></i> Export to File
+                </button>
+                <button class="settings-button secondary" onclick="clearAllData()">
+                    <i class="fas fa-trash-alt"></i> Clear All Data
+                </button>
+            </div>
+            
+            <div class="current-settings" id="current-settings">
+                <strong>Screenshots:</strong> <span id="screenshot-count">0</span> items
+            </div>
+        </div>
+
+        <!-- Management Section -->
+        <div class="management-section">
+            <h3><i class="fas fa-tools"></i> Screenshot Management</h3>
+            
+            <div class="management-buttons">
+                <button onclick="toggleSettings()" class="btn-primary">
+                    <i class="fas fa-cogs"></i> Settings
+                </button>
+                <button onclick="refreshGallery()" class="btn-accent">
+                    <i class="fas fa-sync"></i> Refresh Gallery
+                </button>
+                <button onclick="selectAndUploadImages()" class="btn-secondary">
+                    <i class="fas fa-plus"></i> Add Images
+                </button>
+                <button onclick="diagnoseData()" class="btn-warning">
+                    <i class="fas fa-search"></i> Diagnose Data
+                </button>
+            </div>
+            
+            <div class="usage-instructions">
+                <h4>How to use Screenshot Note:</h4>
+                <p><strong>1. Add Screenshots:</strong> Drag & drop images or use "Add Images" button</p>
+                <p><strong>2. Add Descriptions:</strong> Click on description area to add notes to your screenshots</p>
+                <p><strong>3. Search & Filter:</strong> Use the search box to find specific screenshots</p>
+                <p><strong>4. Import/Export:</strong> Use Settings to import/export JSON data files</p>
+                <p><strong>5. Full Screen:</strong> Click on any image to view it in full screen mode</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="image-modal" id="image-modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <img class="modal-image" id="modal-image" src="" alt="Screenshot">
+        <div class="modal-controls">
+            <button class="modal-btn" onclick="zoomIn()" title="Zoom In">
+                <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="modal-btn" onclick="zoomOut()" title="Zoom Out">
+                <i class="fas fa-search-minus"></i>
+            </button>
+            <button class="modal-btn" onclick="resetZoom()" title="Reset Zoom">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </button>
+        </div>
+        <div class="zoom-indicator" id="zoom-indicator">100%</div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 20px;"></i>
+            <p>Loading screenshots...</p>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
