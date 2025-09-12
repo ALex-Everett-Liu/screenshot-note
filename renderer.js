@@ -344,7 +344,7 @@ async function importAll() {
             
             if (Array.isArray(data)) {
                 const validScreenshots = data.filter(item => 
-                    item.filename && item.path && item.date
+                    item.filename && item.path
                 );
                 
                 if (validScreenshots.length === 0) {
@@ -361,7 +361,7 @@ async function importAll() {
                             id: Date.now() + Math.random() + addedCount,
                             filename: item.filename,
                             description: item.description || '',
-                            date: item.date,
+                            date: item.date || new Date().toISOString(),
                             path: item.path
                         };
                         screenshots.unshift(newScreenshot);
@@ -529,7 +529,7 @@ async function loadSampleData() {
                     id: Date.now() + index,
                     filename: item.filename,
                     description: item.description || '',
-                    date: item.date,
+                    date: item.date || new Date().toISOString(),
                     path: item.path
                 }));
                 
